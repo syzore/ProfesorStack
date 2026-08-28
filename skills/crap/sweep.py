@@ -4,7 +4,7 @@
 Measures deterministically so a model does not have to read source and count
 branches. Prints only offenders. No dependencies beyond the stdlib.
 """
-import argparse, json, os, re, subprocess, sys, xml.etree.ElementTree as ET
+import argparse, ast, json, os, re, subprocess, sys, xml.etree.ElementTree as ET
 from pathlib import Path
 
 THRESHOLD = 30.0
@@ -118,7 +118,50 @@ def functions(path, text, ext):
     return found
 
 
-def complexity(body, ext, ternary=False, boolops=False):
+def _own_nodes(fn):
+    """Every node belonging to this function, not descending into nested
+    functions or classes -- those are scored as themselves."""
+    stack = list(ast.iter_child_nodes(fn))
+    while stack:
+        n = stack.pop()
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda,
+                          ast.ClassDef)):
+            continue
+        yield n
+        stack.extend(ast.iter_child_nodes(n))
+
+
+def py_functions(text, boolops=True):
+    """Exact complexity for Python via the stdlib AST.
+
+    Real CRAP tools walk an AST rather than pattern-match, and for Python that
+    costs nothing extra. Returns None on a syntax error so the caller falls
+    back to the regex scanner.
+    """
+    try:
+        tree = ast.parse(text)
+    except (SyntaxError, ValueError):
+        return None
+    out = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        cc = 1
+        for n in _own_nodes(fn):
+            if isinstance(n, (ast.If, ast.While, ast.For, ast.AsyncFor,
+                              ast.IfExp, ast.ExceptHandler)):
+                cc += 1
+            elif isinstance(n, ast.comprehension):
+                cc += 1 + len(n.ifs)
+            elif boolops and isinstance(n, ast.BoolOp):
+                cc += len(n.values) - 1
+            elif n.__class__.__name__ == "match_case":
+                cc += 1
+        out.append((fn.name, fn.lineno, getattr(fn, "end_lineno", fn.lineno), cc))
+    return out
+
+
+def complexity(body, ext, ternary=False, boolops=True):
     cc = 1 + len(re.findall(KEYWORDS, body))
     if ternary:
         # ?. ?? ?: and Dart/TS nullable types are not branches.
@@ -315,7 +358,8 @@ def main():
     ap.add_argument("--limit", type=int, default=20)
     ap.add_argument("--all", action="store_true", help="list passing functions too")
     ap.add_argument("--ternary", action="store_true", help="count ?: (off: Dart/TS nullable types false-positive)")
-    ap.add_argument("--bool", dest="boolops", action="store_true", help="count && and || (extended complexity)")
+    ap.add_argument("--no-bool", dest="boolops", action="store_false", default=True,
+                    help="do not count && and || (McCabe's narrower definition)")
     ap.add_argument("--include-tests", action="store_true", help="score test files too")
     ap.add_argument("--no-exclude", action="store_true", help="do not skip deps, build output, vendored dirs")
     ap.add_argument("--json", action="store_true")
@@ -342,29 +386,42 @@ def main():
         ext = Path(f).suffix
         clean = scrub(text, ext)
         cl = clean.split("\n")
-        for name, lo, hi in functions(f, clean, ext):
-            cc = complexity("\n".join(cl[lo - 1:hi]), ext, a.ternary, a.boolops)
+        found = py_functions(text, a.boolops) if ext == ".py" else None
+        if found is None:
+            found = [(n, lo, hi,
+                      complexity("\n".join(cl[lo - 1:hi]), ext, a.ternary, a.boolops))
+                     for n, lo, hi in functions(f, clean, ext)]
+        for name, lo, hi, cc in found:
             got = cov.ratio(f, lo, hi)
             c, kind = got if got else (0.0, "none")
             kinds.add(kind)
             score = cc ** 2 * (1 - c) ** 3 + cc
-            need = None if cc >= a.threshold else max(
-                0.0, 1 - ((a.threshold - cc) / cc ** 2) ** (1 / 3)) if cc ** 2 else 0.0
+            # Crappy is strictly ABOVE the threshold: cc 5 with no tests scores
+            # exactly 30 and passes; cc 31 exceeds it even at perfect coverage.
+            unfixable = cc > a.threshold
+            need = None if unfixable else max(
+                0.0, 1 - ((a.threshold - cc) / cc ** 2) ** (1 / 3))
             rows.append({"file": f, "line": lo, "function": name, "cc": cc,
                          "cov": round(c, 3), "cov_kind": kind,
                          "crap": round(score, 1),
-                         "fix": ("split - tests cannot fix" if cc >= a.threshold
-                                 else f"cover {need:.0%}" if score >= a.threshold else "")})
+                         "status": ("crappy" if score > a.threshold
+                                    else "warn" if score > 15 else "clean"),
+                         "fix": ("split - tests cannot fix" if unfixable
+                                 else f"cover {need:.0%}" if score > a.threshold else "")})
     rows.sort(key=lambda r: -r["crap"])
-    bad = [r for r in rows if r["crap"] >= a.threshold]
+    bad = [r for r in rows if r["status"] == "crappy"]
+    warn = [r for r in rows if r["status"] == "warn"]
 
     if a.json:
         print(json.dumps({"scored": len(rows), "offenders": len(bad),
-                          "coverage": cov.kind, "rows": bad if not a.all else rows}, indent=1))
+                          "warnings": len(warn), "threshold": a.threshold,
+                          "coverage": cov.kind,
+                          "rows": rows if a.all else bad}, indent=1))
         return 1 if bad else 0
 
     src = f"{cov.kind} ({'/'.join(sorted(k for k in kinds if k != 'none')) or 'no data'})"
-    print(f"{len(bad)} of {len(rows)} functions at or above {a.threshold:g}.  coverage: {src}")
+    print(f"{len(bad)} of {len(rows)} functions over {a.threshold:g}"
+          f" ({len(warn)} more in the 15-{a.threshold:g} warning band).  coverage: {src}")
     if cov.kind == "none":
         print("NO COVERAGE REPORT FOUND - every cov=0, so this is branch counting only.")
     elif kinds == {"none"}:

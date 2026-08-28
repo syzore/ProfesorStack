@@ -5,18 +5,21 @@ description: Use for /crap, or when judging whether a function is too risky to c
 
 # CRAP score
 
-`CRAP = cc² × (1 − cov)³ + cc` — `cc` is cyclomatic complexity, `cov` is test
-coverage from 0 to 1. At 30 or above the function is too risky to change safely.
-From Crap4J, by Alberto Savoia and Bob Evans.
+`CRAP(m) = CC(m)² × (1 − Cov(m))³ + CC(m)`
+
+`CC` is cyclomatic complexity, `Cov` is coverage from 0.0 to 1.0. **Strictly
+above 30 is crappy**; 30 exactly passes. Coined by Alberto Savoia and Bob Evans
+at Google ("This code is crap", Google Testing Blog, 2011) and implemented in
+Crap4J.
 
 ## Division of labour
 
 **The script measures. You fix.** `sweep.py` finds functions, counts branches,
-parses the coverage report and computes scores — all deterministic, all exact,
-all free. Reading source to count `if` statements yourself burns tokens to
-produce a worse answer that drifts between runs.
+parses the coverage report and computes scores — deterministic, exact, free.
+Reading source to count `if` statements yourself burns tokens to produce a worse
+answer that drifts between runs.
 
-Run the sweep, then open only the functions it flags.
+Run the sweep, then open only what it flags.
 
 ```bash
 python3 ~/.claude/skills/crap/sweep.py            # files changed vs default branch
@@ -24,8 +27,8 @@ python3 ~/.claude/skills/crap/sweep.py src/       # a path
 python3 ~/.claude/skills/crap/sweep.py --json     # for piping
 ```
 
-Stdlib only, no install. Exits 1 when anything scores at or above the
-threshold, so it drops into CI unchanged.
+Stdlib only, no install. Exits 1 when anything is over threshold, so it drops
+into CI unchanged.
 
 | Flag | |
 | --- | --- |
@@ -35,41 +38,47 @@ threshold, so it drops into CI unchanged.
 | `--all` | include passing functions |
 | `--include-tests` | score test files too |
 | `--no-exclude` | do not skip deps, build output, vendored dirs |
-| `--ternary` / `--bool` | count `?:` / `&&`, both off by default |
+| `--no-bool` | stop counting `&&` / `\|\|` |
+| `--ternary` | count `?:` as well |
 
-Coverage is auto-detected from `coverage/lcov.info`, `coverage-final.json`
-(istanbul), `coverage.xml` (cobertura), or `coverage.out` (Go). Branch coverage
-is used when the report has it, line coverage otherwise, and the output says
-which.
+Coverage auto-detects `coverage/lcov.info`, `coverage-final.json` (istanbul),
+`coverage.xml` (cobertura), `coverage.out` (Go). Branch coverage is used when
+the report has it, line coverage otherwise, and the header says which. If a
+report is found but covers none of the scanned files, the sweep warns instead of
+reporting a confident `cov = 0`.
+
+**Prefer a native reporter where one exists** — `phpunit --coverage-crap4j`,
+phpmetrics, the Crap4J Java plugin, `jest-crap-reporter`, NDepend. They work
+from a real compiler front end. `sweep.py` earns its place on everything else,
+GDScript and Dart included.
 
 ## Three consequences, before you measure anything
 
-**Below cc 5, nothing is ever crappy.** With no tests a function scores
-`cc² + cc`, which is 20 at cc 4. Complexity alone cannot reach 30 until the
-fifth branch.
+**Below cc 6, nothing is ever crappy.** With no tests a function scores
+`cc² + cc`, and cc 5 lands on exactly 30 — which passes. The sixth branch is
+where an untested function first fails, at 42.
 
-**At cc 30 and above, tests cannot save it.** The trailing `+ cc` is a floor, so
-a 30-branch function scores exactly 30 at *perfect* coverage and stays crappy.
-Writing tests for it is wasted work before you start. Split it.
+**At cc 31 and above, tests cannot save it.** The trailing `+ cc` is a floor, so
+a 31-branch function scores 31 even at perfect coverage. Writing tests for it is
+wasted work before you start. Split it. (cc 30 is the knife edge: it needs
+exactly 100%.)
 
 **With no coverage report, this is branch counting.** cov is 0 everywhere and
-the threshold collapses to "cc ≥ 5". The sweep says so in its header. Do not
-spend twenty minutes wiring up a coverage tool to learn something arithmetic
-already told you — if the repo has no tests, the number is what it is.
+the threshold collapses to "cc ≥ 6". The sweep says so in its header. Do not
+wire up a coverage tool to learn something arithmetic already told you.
 
 ## Which lever
 
-For anything at or above 30, `cc` decides what to do — not the score.
+For anything over 30, `cc` decides what to do — not the score.
 
-**cc ≥ 30** — refactor. Tests are provably pointless here.
+**cc ≥ 31** — refactor. Tests are provably pointless here.
 
-**cc < 30** — either lever works, so pick by cost. Coverage needed to drop
-under 30:
+**cc ≤ 30** — either lever works, so pick by cost. Coverage needed to get back
+to 30:
 
 | cc | Coverage needed |
 | --- | --- |
-| ≤ 4 | none, cannot be crappy |
-| 5 | any at all |
+| ≤ 5 | none, cannot be crappy |
 | 6 | 13% |
 | 8 | 30% |
 | 10 | 42% |
@@ -79,45 +88,63 @@ under 30:
 | 20 | 71% |
 | 25 | 80% |
 | 29 | 89% |
-| ≥ 30 | impossible |
+| 30 | 100% |
+| ≥ 31 | impossible |
 
 The sweep prints this per function as `cover 42%`. Read it as a cost estimate.
 At cc 10 two tests clear it; at cc 25 you must cover four fifths of a tangled
-function and splitting is usually cheaper.
+function, and splitting is usually cheaper.
 
 **Splitting wins twice**, which the table understates. The `cc²` term means
-halving complexity quarters that part of the score, and the smaller pieces are
-far easier to cover. A cc-14 function at zero coverage scores 210; split evenly
-it is 56 and 72 before a single test exists.
+halving complexity quarters that part of the score, and the pieces are far
+easier to cover. A cc-14 function at zero coverage scores 210; split evenly it
+is 56 and 72 before a single test exists.
+
+Between 15 and 30 the sweep counts a warning band. Worth a look when you are
+already in the file; not worth a special trip.
 
 ## Then fix, in this order
 
-1. **Read the top offender only.** The list is ranked; the tail is usually the
-   same problem in smaller form.
+1. **Read the top offender only.** The list is ranked, and the tail is usually
+   the same problem in smaller form.
 2. **Name the branches.** Guard clauses and early returns delete decision points
-   outright rather than moving them.
+   rather than moving them.
 3. **Extract the densest block** into a named function. Complexity leaves the
-   parent, and the extracted piece is testable in isolation.
-4. **Re-run the sweep.** The number moved or it did not. Do not claim an
+   parent, and the extracted piece is testable alone.
+4. **Re-run the sweep.** The number moved or it did not. Never claim an
    improvement you have not measured.
 
 Refactor before writing tests when both are needed, or the tests pin the shape
 you are about to change.
 
-## What the sweep will not tell you
+## How counting works
 
-It is a regex parser, not a compiler. Treat a surprising result as a question.
+Base 1, then +1 per branching construct: `if` / `elif`, `while`, `for`, each
+`case`, each `catch` / `except`, and each `&&` / `||`. Nothing for `else`,
+`default`, `finally`, `try`, or `switch` itself — they add no new path.
 
-- Nested closures and callbacks may be attributed to the enclosing function.
-- `--ternary` is off because Dart and TypeScript nullable types (`String?`) look
-  identical to `?:` and would inflate every count. Turn it on for languages
-  without them.
-- `&&` and `||` are off, matching McCabe's original definition. Extended
-  complexity counts them. Either is defensible; switching between runs is not,
-  because the two numbers are not comparable.
-- Dependencies, build output, vendored and test directories are skipped on a
-  directory walk. A path you name explicitly is always scored — some repos keep
-  real source under `.claude` or similar.
+**Python is exact**, walked with the stdlib `ast`: nested functions are scored
+as themselves rather than folded into the parent, and comprehensions and
+`match` cases are counted properly. Every other language uses a regex scanner
+over source with comments and string literals blanked out first.
+
+Two deliberate choices in the scanner:
+
+- **`&&` and `||` count**, matching Crap4J and the definition most tools use.
+  `--no-bool` drops to McCabe's narrower one. Either is defensible; switching
+  between runs is not, because the numbers are not comparable.
+- **`?:` does not count by default.** Dart and TypeScript nullable types
+  (`String?`) are indistinguishable from a ternary by regex and would inflate
+  every count. `--ternary` turns it on for languages without them. Python
+  ternaries are counted regardless, because the AST leaves no ambiguity.
+
+Outside Python it is a regex parser, not a compiler. Treat a surprising number
+as a question, not a verdict — closures and callbacks may be attributed to the
+enclosing function.
+
+Dependencies, build output, vendored and test directories are skipped on a
+directory walk. A path named explicitly is always scored, since some repos keep
+real source under `.claude` or similar.
 
 ## Common mistakes
 
@@ -129,7 +156,7 @@ It is a regex parser, not a compiler. Treat a surprising result as a question.
 | Scoring a whole repo unasked | A wall of numbers about code nobody is touching |
 | Counting `&&` in one run and not the next | Two incomparable numbers, no trend |
 | Chasing the score with tests that assert nothing | Coverage rises, risk does not move |
-| Treating 29 as safe and 30 as broken | A smell with an arbitrary line, not a gate |
+| Treating 30 as broken and 29 as safe | A smell with an arbitrary line, not a gate |
 
 The last one matters most. A cc-4 function holding a payment calculation
 deserves tests at a score of 20; a cc-9 match over an enum may be fine forever
