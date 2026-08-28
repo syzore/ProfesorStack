@@ -1,21 +1,17 @@
 ---
 name: user-path-recognition
-description: Use when deciding which action to promote onto a screen, cutting the number of taps to a common action, instrumenting which routes people actually take through an app, or acting on funnel data where one branch dominates its parent. Covers recording paths, the threshold to act, where a shortcut can live, and how to tell whether it worked.
+description: Automate UX/UI shortcuts by recognizing dominant branches in user funnel data. Use to reduce tap depth by taking the most common multi-screen routes and promoting their final actions directly to the parent screen."
 ---
 
 # User path recognition
 
 Two jobs, strictly in that order. Record the routes people actually take, then
-shorten the ones they take often. Do the second without the first and you are
-guessing which button deserves promotion, and a wrong guess costs the most
-valuable space on the screen for as long as it stays there.
+shorten the ones they take often.
 
 ## This runs on analytics you already have
 
 Path recognition is a query over the event stream, not a second system. If the
-app has no product analytics, that comes first. See `user-feedback` for the
-choice of stack, offline queuing, the pseudonymous ID, and the declaration each
-one costs.
+app has no product analytics, that comes first.
 
 ## 1. Record the paths
 
