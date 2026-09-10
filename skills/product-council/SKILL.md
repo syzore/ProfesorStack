@@ -123,18 +123,9 @@ Deadlock on fact is different. Fact deadlock resolves by going and getting the f
 
 ## Landing it
 
-Print the verdict. Then check `git remote -v`.
-
-Origin is `github.com/pureclaim/*` — offer once to file the concrete actions through
-**intake**, which searches every pureclaim repo first so a second mention lands on the
-original issue instead of splitting into a near-duplicate.
-
-Anything else, or you reviewed an idea and there is no repo — print the verdict and
-stop. Do not name a repo you never opened. In testing, a run that had correctly
-declared "no repo" at the top still closed by offering to file issues against a
-specific one it had invented.
-
-Offer once. Never file unasked.
+Print the verdict and stop. Do not name a repo you never opened. In testing, a run
+that had correctly declared "no repo" at the top still closed by offering to file
+issues against a specific one it had invented.
 
 ## Failure modes
 
