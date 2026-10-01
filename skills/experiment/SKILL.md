@@ -31,6 +31,20 @@ Only an experiment needs a hypothesis and a metric. Don't make an experiment out
 - **Shipped versions are immutable.** A substantial change is a new version id, so any past event can be traced to experiment, variant, version, model/params and code version.
 - **Assignment is sticky.** Same stable user id on client and server; no re-randomizing per request; anonymous -> identified keeps the same assignment.
 
+## Where things live
+
+Centralize mechanics, decentralize knowledge. "How do we run experiments?" is shared; "what should this product do?" stays in the project.
+
+| Shared (this skill, later a package) | Project-local |
+| --- | --- |
+| wrapper behavior: identity, fallback, overrides, validation | experiment registry + definitions (`experiments/`) |
+| event and naming conventions | prompts, UI variants, copy |
+| lifecycle rules | hypotheses, metrics, decision rules, product events |
+
+- Each product has its **own PostHog project**; never pool products into one.
+- No cross-project registry. An agent in one repo should understand its experiments from that repo alone.
+- The wrapper lives in each project until a third project copies it; then extract a per-language package (TS / Python / Dart) instead of copying again.
+
 ## 3. Experiment contract
 
 Every experiment has a definition, kept next to the wrapper (YAML or typed constant) and mirrored in the PostHog description:
