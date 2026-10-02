@@ -68,6 +68,18 @@ review_after: 2026-10-15
 - **Payloads are typed.** Required fields, allowed values, defaults. Unknown or malformed -> the safe default, never a crash. Adding fields stays backward compatible with the code's defaults.
 - **Decision rule written before launch.** With enough traffic, state the expected effect and stopping criterion. With low traffic, results are directional, not proof; say so when reporting.
 
+**Cockpit block.** The founder cockpit reads a small fenced block from the PostHog experiment description. Whenever you create, change or conclude an experiment, keep it current (PostHog MCP `experiment-update`):
+
+````
+```cockpit
+hypothesis: prompt_v3 increases accepted ideas
+review_after: 2026-10-15
+agent_note: v3 ahead on acceptance, cost +8%; human review recommended
+```
+````
+
+`hypothesis` and `review_after` are required on running/paused experiments; `agent_note` is optional. Nothing else goes in it: variants, metrics and status already live in PostHog. The full contract above stays in the project's `experiments/` definitions.
+
 ## 4. Exposure
 
 A user enters the experiment when they actually meet the changed experience, not when some code happened to read the flag.

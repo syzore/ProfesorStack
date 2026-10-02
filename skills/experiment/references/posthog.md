@@ -10,7 +10,7 @@ PostHog's SDKs and experiments product change often. Treat this as a starting po
 
 ## Exposure
 
-- Default exposure is `$feature_flag_called`, sent when the flag is read. That makes *where you read the flag* the exposure point.
+- Experiments resolve exposure to `$experiment_exposure` by default (the experiment's `resolved_exposure_event`, verified 2026-10-01); SDK flag reads still send `$feature_flag_called`. Either way *where you read the flag* is the exposure point unless a custom exposure event is configured.
 - Experiments can instead use a custom exposure event (e.g. `generation_started`). Prefer that when the flag must be read earlier than the real exposure.
 - Server-side reads send `$feature_flag_called` too (unless disabled); make sure the same `distinct_id` as the client is used.
 
