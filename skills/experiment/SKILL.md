@@ -72,9 +72,9 @@ review_after: 2026-10-15
 
 ````
 ```cockpit
-hypothesis: prompt_v3 increases accepted ideas
+hypothesis: "prompt_v3 increases accepted ideas"
 review_after: 2026-10-15
-agent_note: v3 ahead on acceptance, cost +8%; human review recommended
+agent_note: "v3 ahead on acceptance, cost +8%; human review recommended"
 ```
 ````
 
