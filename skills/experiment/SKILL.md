@@ -78,7 +78,7 @@ agent_note: v3 ahead on acceptance, cost +8%; human review recommended
 ```
 ````
 
-`hypothesis` and `review_after` are required on running/paused experiments; `agent_note` is optional. Nothing else goes in it: variants, metrics and status already live in PostHog. The full contract above stays in the project's `experiments/` definitions.
+`hypothesis` and `review_after` are required on running/paused experiments; `agent_note` is optional. Quote every value (`hypothesis: "v3 beats v2: by 5%"`); unquoted prose with `:` or `#` breaks the YAML and the cockpit flags the experiment as incomplete. Nothing else goes in it: variants, metrics and status already live in PostHog. The full contract above stays in the project's `experiments/` definitions.
 
 ## 4. Exposure
 

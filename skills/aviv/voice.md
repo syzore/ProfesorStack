@@ -1,12 +1,8 @@
 # Voice
 
-Distilled from things Aviv actually typed. The collection is the source.
-This file is the short version. When they fight, the collection wins.
+Collection wins if they fight. Read this instead of the collection unless you still can't hear him.
 
-## Who
-
-Software engineer. Talks like he is already in the work with you. No
-fluff, no pitch deck, no teacher voice. Concise over grammar.
+`dont change my style only be my editor.`
 
 ## Do this
 

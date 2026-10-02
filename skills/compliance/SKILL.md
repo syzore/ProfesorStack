@@ -138,7 +138,12 @@ as the conformance route.
    finding.
 3. **Do the smallest thing each bucket requires.** Resist upgrading a disclosure
    into a banner because a banner feels more diligent.
-4. **Audit the result for a11y** before calling it done.
+4. **Audit the result for a11y** before calling it done. Unplug the mouse
+   **before** counting contrast ratios. The primary interaction has to exist
+   without a pointer: fractal-chat's reply-click ran off `clientX/clientY`,
+   the idea-machine builder's ports resolve via `elementFromPoint`, puzzle-game
+   #330's shader cards had no focus. Three codebases, same class of defect.
+   Contrast can pass while the product does not exist for a keyboard.
 5. **Record it.** Flip the project's cells in `~/.claude/global-rollouts.md` for
    `Cookie/storage compliance` and `Accessibility (WCAG AA)`, in the same commit
    as the work. `n/a` is a real and common answer for the first one.
