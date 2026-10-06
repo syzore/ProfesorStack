@@ -515,7 +515,7 @@ Use a security verification framework such as OWASP ASVS as the detailed verific
 * [ ] Incident response procedure
 * [ ] Vulnerability reporting mechanism
 
-OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure design, authentication failures, logging/alerting failures, and exceptional-condition handling alongside traditional issues such as access control and injection.
+OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure design, authentication failures, logging/alerting failures, and exceptional-condition handling alongside traditional issues.
 
 ---
 
@@ -699,7 +699,7 @@ Do not automatically interpret this as "install LangChain."
 * [ ] Prompt-change evaluation
 * [ ] Fallback evaluation
 
-OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure output handling, sensitive-information disclosure, supply-chain vulnerabilities, unbounded consumption, excessive agency, vector/embedding security, and system-prompt leakage among the risks that need explicit consideration.
+OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure output handling, sensitive-information disclosure, supply-chain vulnerabilities, unbounded consumption, excessive agency, and model misuse patterns.
 
 ---
 
@@ -1040,7 +1040,7 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ---
 
-# P20 — ANALYTICS
+# P20 — ANALYTICS & EXPERIMENTATION
 
 **Depends on:** P2, P4, P7, P8.
 
@@ -1060,6 +1060,22 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Define error/product event separation
 * [ ] Define experiment tracking
 * [ ] Verify analytics accuracy
+* [ ] Define experiment framework
+* [ ] Define feature-flag strategy
+* [ ] Define experiment goals/objectives
+* [ ] Define primary metric
+* [ ] Define guardrail metrics
+* [ ] Define population segmentation
+* [ ] Define randomization/assignment strategy
+* [ ] Define sample-size and confidence approach
+* [ ] Define holdout/control design
+* [ ] Define experiment duration
+* [ ] Define ramp plan
+* [ ] Define decision thresholds
+* [ ] Define rollback/kill criteria
+* [ ] Define analysis workflow
+* [ ] Define experiment data retention
+* [ ] Define feature-flag cleanup/expiry policy
 
 ---
 
@@ -1352,6 +1368,9 @@ EMAIL
 NOTIFICATIONS
   → push/SMS/email/in-app notification exists
 
+EXPERIMENTS
+  → A/B tests, feature flags, controlled rollouts, or personalization experiments
+
 LLM
   → any generative/model inference call
 
@@ -1438,6 +1457,8 @@ Before the first production implementation task, the agent must produce:
 * [ ] External-dependency inventory
 * [ ] Cost model
 * [ ] Observability plan
+* [ ] Experimentation plan
+* [ ] Feature-flag strategy
 * [ ] Testing strategy
 * [ ] Deployment strategy
 * [ ] Backup/recovery strategy
@@ -1634,6 +1655,6 @@ GENERATE IMPLEMENTATION PLAN
 ONLY THEN RELEASE CODING AGENTS
 ```
 
-This is much more powerful than a conventional "project checklist": it becomes a **project compiler**. The founder gives the machine an idea; the machine expands that idea into the applicable engineering, security, compliance, operational, and business obligations before implementation starts.
+This is much more powerful than a conventional "project checklist": it becomes a **project compiler**. The founder gives the machine an idea; the machine expands that idea into the applicable engineering requirements, compliance, and data model before writing code.
 
 NIST's current SSDF material is particularly compatible with this philosophy: it emphasizes applicability, risk, cost, feasibility, and automation rather than treating security as a static checklist.
