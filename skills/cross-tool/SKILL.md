@@ -11,7 +11,7 @@ Find the changed item's row and run every cell. Facts verified from cursor.com/d
 
 | Item | Claude Code | Cursor |
 | --- | --- | --- |
-| Skill | Loads `~/.claude/skills`, `.claude/skills`. | Loads `~/.claude/skills`, `.claude/skills` too. Check: correct use never depends only on Claude-only frontmatter such as `disable-model-invocation` (agents read user-only skills directly, per `self-improve`). |
+| Skill | Loads `~/.claude/skills`, `.claude/skills`. | Loads `~/.claude/skills`, `.claude/skills` too. Check: correct use never depends only on Claude-only frontmatter such as `disable-model-invocation` (agents read user-only skills directly, per `self-improve`). A cited skill is in one of those dirs; `<plugin>:<name>` and Claude Code built-ins (e.g. `run`) are Claude-only, so the citing line names a Cursor fallback or says `(Claude Code only)`. |
 | Agent | Loads `~/.claude/agents`, `.claude/agents`; honours `skills:`, `tools`, `disallowedTools`. | Loads the same dirs; reads only `name`, `description`, `model`, `readonly`, `is_background`. Check: the body's first line runs every skill in `skills:`, in order; review-only roles have `readonly: true`; no rule rests only on a field Cursor ignores. Nesting stops at main → subagent → subagent. |
 | Project rules | Reads `CLAUDE.md`. | Reads `AGENTS.md` (root and nested). Check: each `AGENTS.md` is a symlink to its sibling `CLAUDE.md` (`git ls-files -s AGENTS.md` shows mode `120000`); one copy only. No `CLAUDE.md` → report the gap. |
 | Global rules | Reads `~/.claude/CLAUDE.md`. | No file. A User Rule (Cursor Settings → Rules) points at `~/.claude/CLAUDE.md` and `~/.claude/agents/co-founder.md`. Check: ask Aviv once per new machine that it still does; agents cannot read Cursor settings. |
