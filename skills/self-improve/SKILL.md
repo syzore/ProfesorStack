@@ -19,7 +19,7 @@ A skill marked user-only (`disable-model-invocation: true`): Read its SKILL.md a
 
 Before reporting, ask: what went wrong, what was slow, which assumption failed, what did the skill or my instructions miss, what capability did I lack? Sort each real **lesson** (one-offs are not lessons):
 
-- **About how you work, in general** → append one dated line to your memory file. Merge with an existing line instead of adding a near-duplicate; keep the file under 100 lines by folding old lines together.
+- **About how you work, in general** → append one dated line to your memory file. Merge with an existing line instead of adding a near-duplicate; keep the file under 100 lines by folding old lines together. Your own memory file is exempt from a read-only brief.
 - **Should change a definition** (a `SKILL.md`, an agent file, the `org` roster) → a proposal. You never edit definitions yourself. Add to your report:
 
   ```
