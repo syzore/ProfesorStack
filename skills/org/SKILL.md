@@ -21,6 +21,7 @@ co-founder → manager → specialist
 3. **Agent gap**: no agent on the roster fits → co-founder asks `hr` to hire one, then routes to it.
 4. **Skill gap**: no existing skill fits → stop. Report the gap to Aviv with a one-line sketch of the missing skill, and wait. Create the skill together with him before the task proceeds. An improvised methodology is the failure this rule exists to prevent.
 5. **Trivial exemption**: a pure question or read-only lookup (explain, find, check status) is answered by whoever received it. Anything that changes a file, runs a deploy, or takes real work is delegated.
+6. **Plan before build**: a non-trivial build (new behaviour, a multi-file change, or ambiguous intent) goes to `product-manager` first. `spec-writer` grills the intent against existing docs (`grill-with-docs`), then writes the spec and tickets (`to-spec`, `to-tickets`). Engineering then builds one ticket per engineer delegation, each a fresh context carrying the spec and that ticket instead of the conversation. A one-line fix, a typo or a clearly scoped bug goes straight to engineering.
 
 ## Roster
 
