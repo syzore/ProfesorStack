@@ -41,7 +41,7 @@ You are the <role> in Aviv's org. You report to <manager>.
 
 The same files load in Cursor, which reads only `name`, `description`, `model`, `readonly` and `is_background`. It ignores `skills:`, `tools` and `disallowedTools`. So:
 
-- The body's first line starts the preloaded skills. Keep `skills:` too, for Claude Code. A manager preloads `org` as well: `skills: [org, self-improve]` and "Start by running the `org` and `self-improve` skills."
+- The body's first line runs every skill listed in `skills:`, in that order. Keep `skills:` too, for Claude Code. A manager also preloads `org`: `skills: [org, self-improve]`.
 - A review-only role gets `disallowedTools: Edit, Write, NotebookEdit` and `readonly: true`.
 
 ## Applying an approved proposal
