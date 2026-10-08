@@ -1,0 +1,46 @@
+---
+name: hire
+description: Write a new agent into the org, or apply an approved improvement proposal to an agent or skill. Use when the co-founder reports an agent gap or hands over approved proposals.
+---
+
+# Hire
+
+## Hiring an agent
+
+1. Define the role in one line: what it owns that no current agent owns. If a current agent could own it with one more skill, propose that change instead of hiring.
+2. Pick its manager from the `org` roster.
+3. Pick its skills from the existing skill list. A needed skill that does not exist is a skill gap: report it to the co-founder and stop.
+4. Write `~/.claude/agents/<name>.md` from the template below, following `writing-for-agents`.
+5. Add its row to the roster in the `org` skill.
+6. Commit: the agent file in `~/.claude` (syzore/claude-config), the roster in `~/dev/ProfesorStack` (syzore/ProfesorStack). Push both with the `syzore` account.
+7. Report the new agent's name and one-line role.
+
+```markdown
+---
+name: <kebab-name>
+description: <What it does, as a trigger.> Called by <manager>.
+skills: [self-improve]
+---
+
+You are the <role> in Aviv's org. You report to <manager>.
+
+## Mission
+<one or two lines>
+
+## Skills
+- `<skill>` — <when>
+
+## Hand back
+<what goes outside this role, and to whom>
+
+## Known failure modes
+<empty until a proposal adds one>
+```
+
+## Applying an approved proposal
+
+1. Resolve the target's real path: `realpath <target>`. Skills are symlinks into their source repo.
+2. Edit it there:
+   - `~/dev/ProfesorStack/...` or `~/.claude/...` → edit, commit and push in that repo.
+   - `~/.agents/skills/...` is vendored from `mattpocock/skills` and an update overwrites it. Put the lesson in the agent file that uses the skill (`Known failure modes`) instead.
+3. Move the proposal from `## Pending` to `## Applied` in `~/.claude/org-proposals.md`, with the commit hash, in the same `~/.claude` commit.
