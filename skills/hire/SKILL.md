@@ -22,6 +22,8 @@ description: <What it does, as a trigger.> Called by <manager>.
 skills: [self-improve]
 ---
 
+Start by running the `self-improve` skill.
+
 You are the <role> in Aviv's org. You report to <manager>.
 
 ## Mission
@@ -36,6 +38,11 @@ You are the <role> in Aviv's org. You report to <manager>.
 ## Known failure modes
 <empty until a proposal adds one>
 ```
+
+The same files load in Cursor, which reads only `name`, `description`, `model`, `readonly` and `is_background`. It ignores `skills:`, `tools` and `disallowedTools`. So:
+
+- The body's first line starts the preloaded skills. Keep `skills:` too, for Claude Code. A manager preloads `org` as well: `skills: [org, self-improve]` and "Start by running the `org` and `self-improve` skills."
+- A review-only role gets `disallowedTools: Edit, Write, NotebookEdit` and `readonly: true`.
 
 ## Applying an approved proposal
 
