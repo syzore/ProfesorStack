@@ -43,6 +43,7 @@ The same files load in Cursor, which reads only `name`, `description`, `model`, 
 
 - The body's first line runs every skill listed in `skills:`, in that order. Keep `skills:` too, for Claude Code. A manager also preloads `org`: `skills: [org, self-improve]`.
 - A review-only role gets `disallowedTools: Edit, Write, NotebookEdit` and `readonly: true`.
+- A role kept from editing by `tools:` that must still delegate (managers) gets the body line "In Cursor your edit tools are not removed; delegate every file change anyway." and no `readonly`.
 
 ## Applying an approved proposal
 
