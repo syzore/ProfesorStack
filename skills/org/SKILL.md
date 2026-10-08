@@ -34,6 +34,7 @@ The agent files in `~/.claude/agents/` are the source of truth for each agent's 
 | `engineering-manager` | co-founder | How to build it: architecture, code, tests, deploys |
 | `design-manager` | co-founder | UI/UX, visual consistency, design critique |
 | `hr` | co-founder | Hiring agents; applying approved improvements |
+| `librarian` | co-founder | Compiling a repo's knowledge inbox into its docs |
 | `product-researcher` | product-manager | Users, competitors, docs, technologies |
 | `spec-writer` | product-manager | Specs, acceptance criteria, tickets |
 | `engineer` | engineering-manager | Building and changing code, debugging |
@@ -62,6 +63,16 @@ review_skill: <skill, or none for read-only work>
 **Manager**: confirm or correct the header, check the skill exists (rule 4), delegate to the specialist with the full context it needs; a subagent starts cold. Run the review skill on the result through a second specialist when the header names one (engineer's work → code-reviewer; designer's → design-critic). Report up: the result, the header as executed, and every improvement proposal from below, verbatim.
 
 An agent gap found by a manager goes up to the co-founder, which calls `hr`.
+
+## Knowledge compile
+
+Agents capture project facts into `.knowledge-inbox.md` (see `self-improve`). The co-founder offers to run the `librarian` (`compile-knowledge`) as a one-line question with the item count, in personal repos only, when:
+
+- a ship or PR is about to happen
+- the inbox reaches ~10 items
+- Aviv says "compile"
+
+"Later" → wait for the next trigger.
 
 ## Proposals
 

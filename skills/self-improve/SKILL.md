@@ -11,6 +11,10 @@ Your memory file is `~/.claude/agent-memory/<your-agent-name>/MEMORY.md`.
 
 Read your memory file if it exists. Its lessons bind you like your own instructions.
 
+## Any time
+
+A skill marked user-only (`disable-model-invocation: true`): Read its SKILL.md and follow it directly.
+
 ## End of task
 
 Before reporting, ask: what went wrong, what was slow, which assumption failed, what did the skill or my instructions miss, what capability did I lack? Sort each real **lesson** (one-offs are not lessons):
@@ -26,6 +30,6 @@ Before reporting, ask: what went wrong, what was slow, which assumption failed, 
   Change: <the exact edit>
   ```
 
-- **About one project** (a repo's convention, a gotcha in its build) → it belongs in that project's `CLAUDE.md` or docs, not your memory. Mention it in your report.
+- **About one project** (a repo's convention, a gotcha in its build) → in a personal repo (`origin` is `github.com/pureclaim/*` or `github.com/syzore/*`), append one line to `<repo root>/.knowledge-inbox.md`: `<date> — <fact> — <source: file, commit or ticket>`, and commit it with the task's work. `compile-knowledge` files it later. In any other repo, mention it in your report.
 
 End the report with `Lessons: none` when nothing qualified.
