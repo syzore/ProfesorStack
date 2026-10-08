@@ -30,6 +30,6 @@ Before reporting, ask: what went wrong, what was slow, which assumption failed, 
   Change: <the exact edit>
   ```
 
-- **About one project** (a repo's convention, a gotcha in its build) → in a personal repo (`origin` is `github.com/pureclaim/*` or `github.com/syzore/*`), append one line to `<repo root>/.knowledge-inbox.md`: `<date> — <fact> — <source: file, commit or ticket>`, and commit it with the task's work. `compile-knowledge` files it later. In any other repo, mention it in your report.
+- **About one project** (a repo's convention, a gotcha in its build) → in a personal repo (`origin` is `github.com/pureclaim/*` or `github.com/syzore/*`), append one line to `<repo root>/.knowledge-inbox.md`: `<date> — <fact> — <source: file, commit or ticket>`, and commit it with the task's work. If the task is read-only, put the lines in your report under `Project facts:` instead. `compile-knowledge` files it later. In any other repo, mention it in your report.
 
 End the report with `Lessons: none` when nothing qualified.

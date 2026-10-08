@@ -51,3 +51,5 @@ The same files load in Cursor, which reads only `name`, `description`, `model`, 
    - `~/dev/ProfesorStack/...` or `~/.claude/...` → edit, commit and push in that repo.
    - `~/.agents/skills/...` is vendored from `mattpocock/skills` and an update overwrites it. Put the lesson in the agent file that uses the skill (`Known failure modes`) instead.
 3. Move the proposal from `## Pending` to `## Applied` in `~/.claude/org-proposals.md`, with the commit hash, in the same `~/.claude` commit.
+
+Last, after a hire or an applied proposal, run `cross-tool` on every agent file and skill you changed.

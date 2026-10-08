@@ -27,3 +27,5 @@ Input: `<repo root>/.knowledge-inbox.md`, one fact per line with a source pointe
 4. **Approve**: show Aviv the doc diff. Commit only after he approves, removing the compiled lines from the inbox in the same commit.
 
 Done when every inbox line has a home or is marked a one-off, every touched file passes the health check, and the inbox is empty.
+
+Last, run `cross-tool`'s Project rules row on the repo.

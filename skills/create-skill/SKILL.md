@@ -17,3 +17,4 @@ Every new skill is created inside the ProfesorStack repo and installed globally.
 
 3. Commit and push the new skill from `~/dev/ProfesorStack` (the repo is `syzore`'s,
    so push with that account active).
+4. Run `cross-tool` on the new skill.
