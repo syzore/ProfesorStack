@@ -1,6 +1,6 @@
 ---
 name: compile-knowledge
-description: Compile a repo's `.knowledge-inbox.md` into its durable docs (CONTEXT.md, ADRs, CLAUDE.md, docs/). Use when the librarian runs, or Aviv says "compile".
+description: Compile a repo's `.knowledge-inbox.md` into its durable docs (GLOSSARY.md, ADRs, CLAUDE.md, docs/). Use when the librarian runs, or Aviv says "compile".
 ---
 
 # Compile knowledge
@@ -14,7 +14,7 @@ Input: `<repo root>/.knowledge-inbox.md`, one fact per line with a source pointe
 
    | Fact | Home | Via |
    | --- | --- | --- |
-   | Domain term | `CONTEXT.md` | `domain-modeling` |
+   | Domain term | `GLOSSARY.md` | `domain-modeling` |
    | Hard-to-reverse decision with a real trade-off | `docs/adr/` | `domain-modeling` |
    | Rule every agent must obey | project `CLAUDE.md` (keep under ~150 lines) | `writing-for-agents` |
    | How a subsystem works | `docs/<topic>.md`, plus a one-line pointer in `CLAUDE.md` | `writing-for-agents` |
