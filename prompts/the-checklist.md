@@ -472,6 +472,7 @@ Use a security verification framework such as OWASP ASVS as the detailed verific
 * [ ] Session fixation protection
 * [ ] Brute-force protection
 * [ ] Rate limiting
+* [ ] Edge proxy in front of the app: WAF, DDoS protection, per-IP rate limits
 * [ ] Abuse detection
 * [ ] Account enumeration review
 
@@ -576,6 +577,7 @@ OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure 
 * [ ] Filtering
 * [ ] Sorting
 * [ ] Rate limiting
+* [ ] Per-user rate limits on endpoints that cost money or reach a person (LLM calls, paid APIs, feedback, email)
 * [ ] Versioning strategy
 * [ ] API documentation
 
@@ -982,6 +984,7 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Add pagination where necessary
 * [ ] Add asynchronous processing where justified
 * [ ] Load test critical paths
+* [ ] Find the capacity ceiling on a production-like copy, and record what saturates first
 * [ ] Test peak behavior
 * [ ] Test degraded dependency behavior
 
@@ -1122,6 +1125,7 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Secret injection
 * [ ] Deployment strategy
 * [ ] Migration strategy
+* [ ] One-off startup work (schema, migrations, seed, recompute) runs once per deploy in a release step, not in every app process
 * [ ] Rollback strategy
 * [ ] Health check
 * [ ] Readiness check
@@ -1149,6 +1153,9 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Backup monitoring
 * [ ] Provider status monitoring
 * [ ] Resource limits
+* [ ] More than one app process (workers or replicas)
+* [ ] App processes times connection-pool size stays under the database's connection limit
+* [ ] Scale the database up before adding read replicas
 * [ ] Autoscaling where justified
 * [ ] Disaster-recovery plan
 * [ ] Recovery procedure
