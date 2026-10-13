@@ -50,7 +50,7 @@ The same files load in Cursor, which reads only `name`, `description`, `model`, 
 1. Resolve the target's real path: `realpath <target>`. Skills are symlinks into their source repo.
 2. Edit it there:
    - `~/dev/ProfesorStack/...` or `~/.claude/...` → edit, commit and push in that repo.
-   - `~/.agents/skills/...` is vendored from `mattpocock/skills` and an update overwrites it. Put the lesson in the agent file that uses the skill (`Known failure modes`) instead.
+   - A skill whose realpath is `~/.agents/skills/<name>` is vendored and an update overwrites it. Replace the `~/.claude/skills/<name>` symlink with a real dir, edit that, and remove `~/.agents/skills/<name>` plus its `.skill-lock.json` entry so Cursor does not load the upstream copy. If removal is denied, hand Aviv the two commands and say Cursor sees a duplicate until he runs them.
    - Before any `npx skills` command, commit `~/.claude`; after, `git status` there and restore any tracked skill it replaced or deleted. `npx skills check` updates; it is not a dry run.
 3. Move the proposal from `## Pending` to `## Applied` in `~/.claude/org-proposals.md`, with the commit hash, in the same `~/.claude` commit.
 
