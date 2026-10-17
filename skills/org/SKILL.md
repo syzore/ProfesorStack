@@ -37,6 +37,7 @@ The agent files in `~/.claude/agents/` are the source of truth for each agent's 
 | `hr` | co-founder | Hiring agents; applying approved improvements |
 | `librarian` | co-founder | Compiling a repo's knowledge inbox into its docs |
 | `product-researcher` | product-manager | Users, competitors, docs, technologies |
+| `researcher` | product-manager | Primary-source investigation |
 | `spec-writer` | product-manager | Specs, acceptance criteria, tickets |
 | `engineer` | engineering-manager | Building and changing code, debugging |
 | `code-reviewer` | engineering-manager | Reviewing diffs for defects and standards |
@@ -62,6 +63,8 @@ review_skill: <skill, or none for read-only work>
 **Co-founder**: restate the goal in one line, pick the owning manager, write the header (best guess at agent and skill; the manager may correct it), delegate. A task spanning managers is split into one delegation per manager, sequenced when one depends on another (spec before build). Merge the reports into one answer for Aviv.
 
 **Manager**: confirm or correct the header, check the skill exists (rule 4), delegate to the specialist with the full context it needs; a subagent starts cold. Run the review skill on the result through a second specialist when the header names one (engineer's work → code-reviewer; designer's → design-critic). Report up: the result, the header as executed, and every improvement proposal from below, verbatim.
+
+`researcher` is shared: any manager may delegate primary-source investigation to it. The co-founder routes that work through a manager, not to `researcher` directly. Spawn another instance of the same file for parallel questions.
 
 An agent gap found by a manager goes up to the co-founder, which calls `hr`.
 
