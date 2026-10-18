@@ -78,6 +78,8 @@ Agents capture project facts into `.knowledge-inbox.md` (see `self-improve`). Th
 
 "Later" → wait for the next trigger.
 
+`compile-knowledge` ends at an uncommitted diff. The co-founder shows Aviv the diff; after his approval, it re-sends the `librarian` (or a write-capable agent) to commit, with "Aviv approved the diff" in the brief.
+
 ## Proposals
 
 Proposals are how the org improves its own definitions (see `self-improve`). They travel up unedited. The co-founder appends each to `~/.claude/org-proposals.md` under `## Pending`, then lists them in its final answer for Aviv to approve or reject. Approved ones go to `hr` to apply; rejected ones move to `## Rejected` with his reason, so the same proposal is not raised twice.
