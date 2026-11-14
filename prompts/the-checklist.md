@@ -13,6 +13,8 @@
 > **Planning comes before implementation.**
 >
 > The checklist is a DAG: later work may depend on earlier decisions.
+>
+> Each step has a guide in `the-checklist/` (`P<NN>-<slug>.md`). Basic drafts, pending Aviv's review.
 
 ---
 
@@ -52,6 +54,8 @@ Every item should ultimately have:
 
 ## Product
 
+Guide: [P00-product](the-checklist/P00-product.md)
+
 * [ ] Define project name
 * [ ] Define one-sentence product description
 * [ ] Define target user
@@ -73,6 +77,8 @@ Every item should ultimately have:
 
 ## Business
 
+Guide: [P00-business](the-checklist/P00-business.md)
+
 * [ ] Define business model
 * [ ] Define whether product is free
 * [ ] Define subscription model if applicable
@@ -90,6 +96,8 @@ Every item should ultimately have:
 * [ ] Define expected gross margin where relevant
 
 ## Product risks
+
+Guide: [P00-product-risks](the-checklist/P00-product-risks.md)
 
 * [ ] Identify top product risks
 * [ ] Identify top technical risks
@@ -111,6 +119,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Jurisdiction
 
+Guide: [P01-jurisdiction](the-checklist/P01-jurisdiction.md)
+
 * [ ] Identify founder/company jurisdiction
 * [ ] Identify target customer jurisdictions
 * [ ] Identify hosting jurisdictions
@@ -122,6 +132,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Identify regulated-industry exposure
 
 ## Privacy
+
+Guide: [P01-privacy](the-checklist/P01-privacy.md)
 
 * [ ] Determine whether personal data is collected
 * [ ] Determine whether sensitive personal data is collected
@@ -140,6 +152,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Commercial/legal
 
+Guide: [P01-commercial-legal](the-checklist/P01-commercial-legal.md)
+
 * [ ] Determine Terms of Service requirements
 * [ ] Determine Privacy Policy requirements
 * [ ] Determine refund/cancellation requirements
@@ -154,6 +168,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Industry-specific
 
+Guide: [P01-industry-specific](the-checklist/P01-industry-specific.md)
+
 * [ ] Determine healthcare exposure
 * [ ] Determine financial-services exposure
 * [ ] Determine education/minor exposure
@@ -166,6 +182,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Determine AI-specific regulation exposure
 
 ## Compliance deliverable
+
+Guide: [P01-compliance-deliverable](the-checklist/P01-compliance-deliverable.md)
 
 * [ ] Create jurisdiction matrix
 * [ ] Create compliance applicability matrix
@@ -186,6 +204,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Users
 
+Guide: [P02-users](the-checklist/P02-users.md)
+
 * [ ] Determine whether login exists
 * [ ] Determine anonymous-user behavior
 * [ ] Determine guest mode
@@ -203,6 +223,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Identity
 
+Guide: [P02-identity](the-checklist/P02-identity.md)
+
 * [ ] Choose authentication mechanism
 * [ ] Choose passwordless/password/social authentication if applicable
 * [ ] Define session expiration
@@ -214,6 +236,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Define email delivery failure behavior
 
 ## Data inventory
+
+Guide: [P02-data-inventory](the-checklist/P02-data-inventory.md)
 
 * [ ] List every stored entity
 * [ ] List every stored field
@@ -232,6 +256,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Identify whether it is sent to third parties
 
 ## Data lifecycle
+
+Guide: [P02-data-lifecycle](the-checklist/P02-data-lifecycle.md)
 
 * [ ] Collection
 * [ ] Validation
@@ -252,7 +278,29 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 **Depends on:** P0, P1, P2.
 
+## Non-functional requirements
+
+Guide: [P03-non-functional-requirements](the-checklist/P03-non-functional-requirements.md)
+
+* [ ] Choose CAP/PACELC behavior for each data domain: what it gives up during a partition, and what it trades for latency when healthy
+* [ ] Set the consistency model for each data domain (strong, read-your-writes, eventual)
+* [ ] Set the availability SLO and monthly error budget for each user-facing path
+* [ ] Name the scalability axis: what grows (users, data volume, writes, reads, tenants) and by how much, e.g. 10x in 12 months
+* [ ] Set p50 and p99 latency targets for each key path
+* [ ] Set peak read and write throughput, e.g. requests/second at the busiest hour
+* [ ] Set durability: RPO, write acknowledgement semantics, and replication needed to meet it
+* [ ] Set fault tolerance: RTO, blast radius of one failure, and the DR approach
+* [ ] Set security requirements: authentication, authorization, encryption, audit
+* [ ] Set privacy and compliance requirements: regimes in scope, data residency, retention
+* [ ] Record environment constraints: budget, team size, cloud limits, legacy systems
+* [ ] Set observability requirements: what must be measurable and alertable per path
+* [ ] Set a cost ceiling per month and per user
+* [ ] Set maintainability requirements: who operates this, on-call load, upgrade cadence
+* [ ] Give every requirement a number or a test, not an adjective
+
 ## Architecture
+
+Guide: [P03-architecture](the-checklist/P03-architecture.md)
 
 * [ ] Choose frontend
 * [ ] Choose backend
@@ -275,6 +323,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Architecture decisions
 
+Guide: [P03-architecture-decisions](the-checklist/P03-architecture-decisions.md)
+
 * [ ] Define system boundaries
 * [ ] Define services/modules
 * [ ] Define API boundaries
@@ -296,7 +346,31 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Define timeout strategy
 * [ ] Define circuit-breaking/fallback behavior where needed
 
+## Trade-offs and options
+
+Guide: [P03-trade-offs-and-options](the-checklist/P03-trade-offs-and-options.md)
+
+For each item: name the options considered, record the choice, and record why.
+
+* [ ] Decide SQL vs NoSQL per data domain
+* [ ] Decide sync vs async (queue) per flow
+* [ ] Decide push vs pull, and fan-out on write vs fan-out on read
+* [ ] Decide cache strategy (cache-aside, write-through, write-behind) and the invalidation rule
+* [ ] Decide the sharding/partition key, and what queries it makes expensive
+* [ ] Decide replication model (leader-follower, multi-leader, leaderless/quorum)
+* [ ] Decide batch vs stream vs micro-batch for each pipeline
+* [ ] Decide strong vs eventual consistency per domain
+* [ ] Decide build vs managed for each component, e.g. self-run Kafka vs a managed queue
+* [ ] Decide monolith vs services
+* [ ] Decide polling vs WebSockets vs SSE for each live update
+* [ ] Decide which indexes to add, weighing read speed against write cost and storage
+* [ ] Decide where idempotency keys are required, and their scope and expiry
+* [ ] Decide backpressure and load-shedding behavior: what is dropped, delayed, or rejected first
+* [ ] Decide how to mitigate hot partitions (key salting, caching, splitting hot keys)
+
 ## Scale
+
+Guide: [P03-scale](the-checklist/P03-scale.md)
 
 * [ ] Estimate users
 * [ ] Estimate requests/second
@@ -311,7 +385,26 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Identify expected bottlenecks
 * [ ] Define scaling threshold
 
+## Escalations
+
+Guide: [P03-escalations](the-checklist/P03-escalations.md)
+
+Do not decide these alone. Bring them to the human with the options and a recommendation.
+
+* [ ] Escalate before choosing AP over CP for money or identity data: stale or divergent reads could cost money or grant wrong access
+* [ ] Escalate before accepting an RPO above zero for customer data: data loss becomes possible
+* [ ] Escalate before any irreversible data migration: no tested way back
+* [ ] Escalate before adding a new paid or managed vendor: new cost, dependency, and data-sharing
+* [ ] Escalate before cross-region deployment or data residency choices: legal and cost impact
+* [ ] Record the cost threshold above which an estimate needs human approval
+* [ ] Escalate before accepting a cost estimate above that threshold
+* [ ] Escalate before weakening any security control
+* [ ] Escalate before any compliance scope change (SOC 2, GDPR, HIPAA, CCPA)
+* [ ] Escalate before any one-way-door architecture choice: hard or costly to reverse
+
 ## Architecture documentation
+
+Guide: [P03-architecture-documentation](the-checklist/P03-architecture-documentation.md)
 
 * [ ] Create architecture diagram
 * [ ] Create data-flow diagram
@@ -327,6 +420,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 **Depends on:** P0, P2, P3.
 
 ## UX
+
+Guide: [P04-ux](the-checklist/P04-ux.md)
 
 * [ ] Define primary user journey
 * [ ] Define onboarding
@@ -346,6 +441,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Define responsive behavior
 
 ## Accessibility
+
+Guide: [P04-accessibility](the-checklist/P04-accessibility.md)
 
 * [ ] Keyboard navigation
 * [ ] Visible focus
@@ -370,6 +467,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Internationalization
 
+Guide: [P04-internationalization](the-checklist/P04-internationalization.md)
+
 * [ ] Determine supported languages
 * [ ] Externalize strings
 * [ ] Handle pluralization
@@ -392,6 +491,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Repository
 
+Guide: [P05-repository](the-checklist/P05-repository.md)
+
 * [ ] Create repository
 * [ ] Define branch strategy
 * [ ] Define commit conventions if needed
@@ -404,6 +505,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 * [ ] Define seed/test data strategy
 
 ## Code quality
+
+Guide: [P05-code-quality](the-checklist/P05-code-quality.md)
 
 * [ ] Language/toolchain versions pinned
 * [ ] Package/dependency manager chosen
@@ -424,6 +527,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 
 ## Configuration
 
+Guide: [P05-configuration](the-checklist/P05-configuration.md)
+
 * [ ] Development configuration
 * [ ] Test configuration
 * [ ] Staging configuration
@@ -442,6 +547,8 @@ This stage does not implement compliance. It determines **which compliance oblig
 Use a security verification framework such as OWASP ASVS as the detailed verification layer.
 
 ## Application security
+
+Guide: [P06-application-security](the-checklist/P06-application-security.md)
 
 * [ ] Threat model
 * [ ] Attack surface inventory
@@ -478,6 +585,8 @@ Use a security verification framework such as OWASP ASVS as the detailed verific
 
 ## Data security
 
+Guide: [P06-data-security](the-checklist/P06-data-security.md)
+
 * [ ] Encryption in transit
 * [ ] Encryption at rest where appropriate
 * [ ] Secret storage
@@ -492,6 +601,8 @@ Use a security verification framework such as OWASP ASVS as the detailed verific
 
 ## Supply chain
 
+Guide: [P06-supply-chain](the-checklist/P06-supply-chain.md)
+
 * [ ] Dependency inventory
 * [ ] Lock files
 * [ ] Vulnerability scanning
@@ -504,6 +615,8 @@ Use a security verification framework such as OWASP ASVS as the detailed verific
 * [ ] Build provenance/integrity where appropriate
 
 ## Operational security
+
+Guide: [P06-operational-security](the-checklist/P06-operational-security.md)
 
 * [ ] Admin accounts protected
 * [ ] Production access restricted
@@ -521,6 +634,8 @@ OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure 
 ---
 
 # P7 — PRIVACY & DATA GOVERNANCE
+
+Guide: [P07-privacy-and-data-governance](the-checklist/P07-privacy-and-data-governance.md)
 
 **Depends on:** P1, P2, P3, P6.
 
@@ -554,6 +669,8 @@ OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure 
 
 ## Domain
 
+Guide: [P08-domain](the-checklist/P08-domain.md)
+
 * [ ] Define domain entities
 * [ ] Define domain invariants
 * [ ] Define validation rules
@@ -566,6 +683,8 @@ OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure 
 * [ ] Define idempotency behavior
 
 ## API
+
+Guide: [P08-api](the-checklist/P08-api.md)
 
 * [ ] API contract
 * [ ] Authentication
@@ -582,6 +701,8 @@ OWASP's current 2025 Top 10 explicitly elevates supply-chain failures, insecure 
 * [ ] API documentation
 
 ## Database
+
+Guide: [P08-database](the-checklist/P08-database.md)
 
 * [ ] Schema
 * [ ] Primary keys
@@ -608,6 +729,8 @@ Do not automatically interpret this as "install LangChain."
 
 ## Model layer
 
+Guide: [P09-model-layer](the-checklist/P09-model-layer.md)
+
 * [ ] Identify all model calls
 * [ ] Identify model providers
 * [ ] Define provider abstraction where useful
@@ -623,8 +746,16 @@ Do not automatically interpret this as "install LangChain."
 * [ ] Define caching strategy
 * [ ] Define streaming behavior
 * [ ] Define structured-output strategy
+* [ ] Censor PII in-process before any text reaches a model SDK or API
+* [ ] Define the PII types this product must catch
+* [ ] Restore originals only in process memory, after the response
+* [ ] Keep the censor token map out of logs, storage, and the outbound request
+* [ ] Block the model call when the censor fails
+* [ ] Choose the censor: [PrivacyScrubber](https://privacyscrubber.com/) (`@privacyscrubber/sdk`, local `sanitize` / `restore`) or the same behavior built in-house. Record owner, failure mode, and replacement path
 
 ## Framework
+
+Guide: [P09-framework](the-checklist/P09-framework.md)
 
 * [ ] Determine whether an orchestration framework is necessary
 * [ ] Evaluate LangChain/LangGraph/etc. only if needed
@@ -633,6 +764,8 @@ Do not automatically interpret this as "install LangChain."
 * [ ] Define framework upgrade strategy
 
 ## Prompting
+
+Guide: [P09-prompting](the-checklist/P09-prompting.md)
 
 * [ ] System-prompt architecture
 * [ ] Prompt versioning
@@ -646,6 +779,8 @@ Do not automatically interpret this as "install LangChain."
 
 ## Output safety
 
+Guide: [P09-output-safety](the-checklist/P09-output-safety.md)
+
 * [ ] Validate model output
 * [ ] Schema-validate structured output
 * [ ] Sanitize output
@@ -657,6 +792,8 @@ Do not automatically interpret this as "install LangChain."
 * [ ] Define human-review path where required
 
 ## RAG
+
+Guide: [P09-rag](the-checklist/P09-rag.md)
 
 * [ ] Data-source inventory
 * [ ] Source authorization
@@ -673,6 +810,8 @@ Do not automatically interpret this as "install LangChain."
 * [ ] Embedding deletion propagation
 
 ## Agents/tools
+
+Guide: [P09-agents-tools](the-checklist/P09-agents-tools.md)
 
 * [ ] Tool inventory
 * [ ] Tool permissions
@@ -691,6 +830,8 @@ Do not automatically interpret this as "install LangChain."
 
 ## Evaluation
 
+Guide: [P09-evaluation](the-checklist/P09-evaluation.md)
+
 * [ ] Golden test set
 * [ ] Regression tests
 * [ ] Quality metrics
@@ -706,6 +847,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P10 — CONDITIONAL MODULE: PAYMENTS
+
+Guide: [P10-payments](the-checklist/P10-payments.md)
 
 **Only applicable if money changes hands.**
 
@@ -746,6 +889,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P11 — CONDITIONAL MODULE: ADS / MONETIZATION
 
+Guide: [P11-ads-monetization](the-checklist/P11-ads-monetization.md)
+
 **Only applicable if advertising or tracking-supported monetization exists.**
 
 **Depends on:** P1, P2, P4, P7, P8.
@@ -774,6 +919,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P12 — CONDITIONAL MODULE: EMAIL / NOTIFICATIONS
 
+Guide: [P12-email-notifications](the-checklist/P12-email-notifications.md)
+
 **Depends on:** P2, P7, P8.
 
 * [ ] Email provider
@@ -797,6 +944,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P13 — CONDITIONAL MODULE: FILES / MEDIA
+
+Guide: [P13-files-media](the-checklist/P13-files-media.md)
 
 **Depends on:** P2, P3, P6, P8.
 
@@ -822,6 +971,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P14 — CONDITIONAL MODULE: SEARCH / RAG / INDEXING
 
+Guide: [P14-search-rag-indexing](the-checklist/P14-search-rag-indexing.md)
+
 **Depends on:** P2, P3, P6, P8.
 
 * [ ] Search engine selection
@@ -843,6 +994,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P15 — CONDITIONAL MODULE: REALTIME / WEBSOCKETS
 
+Guide: [P15-realtime-websockets](the-checklist/P15-realtime-websockets.md)
+
 **Depends on:** P3, P6, P8.
 
 * [ ] Connection authentication
@@ -863,6 +1016,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P16 — CONDITIONAL MODULE: BACKGROUND JOBS / CRON / AGENTS
+
+Guide: [P16-background-jobs-cron-agents](the-checklist/P16-background-jobs-cron-agents.md)
 
 **Depends on:** P3, P5, P8.
 
@@ -893,6 +1048,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Unit
 
+Guide: [P17-unit](the-checklist/P17-unit.md)
+
 * [ ] Domain logic
 * [ ] Validation
 * [ ] State transitions
@@ -900,6 +1057,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Utility functions
 
 ## Integration
+
+Guide: [P17-integration](the-checklist/P17-integration.md)
 
 * [ ] Database
 * [ ] Authentication
@@ -913,6 +1072,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## API
 
+Guide: [P17-api](the-checklist/P17-api.md)
+
 * [ ] Happy paths
 * [ ] Invalid input
 * [ ] Unauthorized access
@@ -925,6 +1086,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## End-to-end
 
+Guide: [P17-end-to-end](the-checklist/P17-end-to-end.md)
+
 * [ ] New user
 * [ ] Returning user
 * [ ] Core product journey
@@ -936,6 +1099,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Critical accessibility journey
 
 ## Security testing
+
+Guide: [P17-security-testing](the-checklist/P17-security-testing.md)
 
 * [ ] Authentication testing
 * [ ] Authorization testing
@@ -952,6 +1117,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## AI testing
 
+Guide: [P17-ai-testing](the-checklist/P17-ai-testing.md)
+
 * [ ] Prompt-injection tests
 * [ ] Output-validation tests
 * [ ] Data-leakage tests
@@ -965,11 +1132,14 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P18 — PERFORMANCE
 
+Guide: [P18-performance](the-checklist/P18-performance.md)
+
 **Depends on:** functional implementation.
 
 * [ ] Define performance budgets
 * [ ] Define page-load target
 * [ ] Define API latency target
+* [ ] Check measured p50/p99 against the latency target of each key path from P3
 * [ ] Define database latency target
 * [ ] Define background-job target
 * [ ] Measure frontend performance
@@ -985,6 +1155,9 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Add asynchronous processing where justified
 * [ ] Load test critical paths
 * [ ] Find the capacity ceiling on a production-like copy, and record what saturates first
+* [ ] Load test at the P3 peak throughput target, not only at current traffic
+* [ ] Check for hot partitions or hot keys under skewed load
+* [ ] Set a cache hit-rate target and measure it
 * [ ] Test peak behavior
 * [ ] Test degraded dependency behavior
 
@@ -995,6 +1168,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 **Depends on:** P3, P5, P8.
 
 ## Logging
+
+Guide: [P19-logging](the-checklist/P19-logging.md)
 
 * [ ] Structured logs
 * [ ] Correlation/request ID
@@ -1007,6 +1182,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Log access controls
 
 ## Metrics
+
+Guide: [P19-metrics](the-checklist/P19-metrics.md)
 
 * [ ] Request count
 * [ ] Error rate
@@ -1022,12 +1199,16 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Tracing
 
+Guide: [P19-tracing](the-checklist/P19-tracing.md)
+
 * [ ] Critical request tracing
 * [ ] Background-job tracing
 * [ ] External-call tracing
 * [ ] Database tracing where useful
 
 ## Alerts
+
+Guide: [P19-alerts](the-checklist/P19-alerts.md)
 
 * [ ] Service unavailable
 * [ ] Error spike
@@ -1044,6 +1225,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P20 — ANALYTICS & EXPERIMENTATION
+
+Guide: [P20-analytics-and-experimentation](the-checklist/P20-analytics-and-experimentation.md)
 
 **Depends on:** P2, P4, P7, P8.
 
@@ -1084,6 +1267,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P21 — SEO / DISCOVERABILITY
 
+Guide: [P21-seo-discoverability](the-checklist/P21-seo-discoverability.md)
+
 **Only applicable to public web products.**
 
 **Depends on:** P4, P8.
@@ -1110,6 +1295,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P22 — DEPLOYMENT / CI/CD
+
+Guide: [P22-deployment-ci-cd](the-checklist/P22-deployment-ci-cd.md)
 
 **Depends on:** P5, P6, P17.
 
@@ -1138,6 +1325,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P23 — INFRASTRUCTURE / RELIABILITY
 
+Guide: [P23-infrastructure-reliability](the-checklist/P23-infrastructure-reliability.md)
+
 **Depends on:** P3, P19, P22.
 
 * [ ] Production infrastructure
@@ -1161,7 +1350,10 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Recovery procedure
 * [ ] Recovery-time objective
 * [ ] Recovery-point objective
-* [ ] Restore test
+* [ ] Restore test, timed against the RTO and checked against the RPO
+* [ ] Failover drill for each component with a standby or replica
+* [ ] Test backpressure and load-shedding behavior under overload
+* [ ] Define the error-budget policy: what stops or slows when the budget is spent
 * [ ] Single-point-of-failure review
 
 ---
@@ -1171,6 +1363,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 **Depends on all required prior gates.**
 
 ## Product
+
+Guide: [P24-product](the-checklist/P24-product.md)
 
 * [ ] Critical journey works
 * [ ] Empty states work
@@ -1182,6 +1376,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Security
 
+Guide: [P24-security](the-checklist/P24-security.md)
+
 * [ ] Critical vulnerabilities resolved
 * [ ] Authentication verified
 * [ ] Authorization verified
@@ -1191,6 +1387,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Data
 
+Guide: [P24-data](the-checklist/P24-data.md)
+
 * [ ] Backups running
 * [ ] Restore tested
 * [ ] Deletion tested
@@ -1198,6 +1396,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Privacy controls tested
 
 ## Operations
+
+Guide: [P24-operations](the-checklist/P24-operations.md)
 
 * [ ] Monitoring works
 * [ ] Alerts work
@@ -1209,6 +1409,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Legal/business
 
+Guide: [P24-legal-business](the-checklist/P24-legal-business.md)
+
 * [ ] Required legal documents published
 * [ ] Required disclosures published
 * [ ] Pricing correct
@@ -1219,6 +1421,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] Domain/email infrastructure ready
 
 ## Launch
+
+Guide: [P24-launch](the-checklist/P24-launch.md)
 
 * [ ] Production smoke test
 * [ ] Analytics smoke test
@@ -1236,6 +1440,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Daily/continuous
 
+Guide: [P25-daily-continuous](the-checklist/P25-daily-continuous.md)
+
 * [ ] Service health
 * [ ] Error health
 * [ ] Security alerts
@@ -1248,6 +1454,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 ## Weekly
 
+Guide: [P25-weekly](the-checklist/P25-weekly.md)
+
 * [ ] Dependency updates
 * [ ] Security review
 * [ ] Product analytics review
@@ -1259,6 +1467,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 * [ ] User feedback review
 
 ## Monthly/periodic
+
+Guide: [P25-monthly-periodic](the-checklist/P25-monthly-periodic.md)
 
 * [ ] Access review
 * [ ] Secret/credential review
@@ -1276,6 +1486,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P26 — GROWTH
+
+Guide: [P26-growth](the-checklist/P26-growth.md)
 
 **Only after the product is operational.**
 
@@ -1303,6 +1515,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 
 # P27 — PROJECT MAINTENANCE / AGENT HYGIENE
 
+Guide: [P27-project-maintenance-agent-hygiene](the-checklist/P27-project-maintenance-agent-hygiene.md)
+
 **Continuous.**
 
 * [ ] Detect dead code
@@ -1329,6 +1543,8 @@ OWASP's 2025 LLM guidance specifically calls out prompt injection, insecure outp
 ---
 
 # P28 — RETIREMENT / EXIT
+
+Guide: [P28-retirement-exit](the-checklist/P28-retirement-exit.md)
 
 **Depends on:** whenever the project is killed, replaced, sold, or archived.
 
