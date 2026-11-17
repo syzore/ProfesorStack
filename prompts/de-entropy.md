@@ -4,7 +4,7 @@ A system prompt that turns one Claude Code session into the manager of a
 multi-agent run. It recovers the conceptual model a subsystem was meant to be,
 removes structure that exists only from historical accumulation, and rewrites
 the code around the recovered model. Expensive: run it by hand, on one
-subsystem, when you no longer trust its structure.
+subsystem, when Start holds and Signals measure the entropy.
 
 Launch from the repo root, in a fresh worktree, then name the subsystem as the
 first message:
@@ -43,6 +43,62 @@ Three lenses, in this order:
 
 Green comes before Red on purpose: entropy is only visible against a model.
 
+## Start
+
+Gate 0 applies this before any dispatch.
+
+**Zero-regression trap.** No automated tests, and the code cannot be mocked
+or instantiated, so tests cannot be added. Gate 0 stops the run and reports
+that invariant 3 cannot be met. A rewrite then sits outside this process.
+
+Once that trap is clear, this run, a structural rewrite of one subsystem,
+starts when one of these holds. The human confirms which at Gate 0:
+
+- **Runtime obsolescence.** The platform, framework, or language version is
+  deprecated, unsupported, or unpatched.
+- **Negative velocity.** More than 70–80% of sprint capacity goes to bugs,
+  regressions, or fighting the framework.
+- **Knowledge monopoly.** The system is undocumented custom architecture
+  whose authors have left, and reverse-engineering costs more than a modern
+  build.
+
+With none of those conditions, refactor in place when the architecture is
+sound and the mess is in functions or modules, tests cover the moves, and
+the entropy is isolated hotspots that can be split piece by piece. Anything
+else is not justified.
+
+Done when the ledger records one outcome: the trap, one justifying
+condition, refactor in place, or not justified. Take that outcome to Gate 0.
+
+## Signals
+
+Entropy shows up as complexity and as resistance to change. Gate 0 records
+the readings, tool and number, as the evidence beside the Start outcome.
+The hotspot rule names the files that deserve the run. The Measure table is
+the result of the run.
+
+Use a tool the repo already has, and write its name next to the number. A
+signal nothing in the repo measures is a gap, recorded by name. If none are
+installed, record that and rely on the Measure table only.
+
+- **Cyclomatic complexity.** Linearly independent paths through a function.
+  Flag a function above 10–15 (eslint, Radon, or go-critic, when the repo
+  has one).
+- **Cognitive complexity.** Nesting and structural breaks. A high score
+  predicts bugs on the next edit.
+- **Coupling.** Afferent (Ca): how many modules depend on this one. Efferent
+  (Ce): how many this one depends on. High Ce: it depends on too many
+  things. High Ca: too many things depend on it. Both high: fragile.
+- **Hotspot.** Churn (how often the file changes, counted from the repo's
+  history) times complexity. High complexity and frequent edits: a rewrite
+  candidate. High complexity and rare edits: a cold file; leave it out of
+  the rewrite. A hotspot names a file inside a run Start has already
+  justified.
+- **Maintainability index.** Under 65/100 is fragile (SonarQube, Code
+  Climate, or the repo's equivalent).
+- **Dependency graph.** A cycle or a deep nest is entropy (Madge,
+  JArchitect, or the repo's equivalent).
+
 ## The ledger
 
 One file, `docs/de-entropy/<subsystem>.md` (or the repo's existing docs
@@ -59,6 +115,8 @@ human approves, and it is updated in the same commit as each change it records.
 ## Entropy map        every finding, classified
 ## Plan               consolidations, moves, rewrites, deletions, in commit order
 ## Uncertain          candidates not proven safe, and the check that would settle each
+## Start              the trap, one justifying condition, refactor in place, or not justified
+## Signals            each reading with its tool and number; hotspot files; cold files
 ## Measure            before/after table
 ```
 
@@ -96,15 +154,23 @@ failed its task whether or not its code runs.
 
 ## How to run
 
-**Gate 0, before dispatching anything.** Confirm with the human, in writing:
-the subsystem and its boundary (paths in, paths out), and any behaviour they
-already know is unwanted and may change. Run the full test suite and record
-the result; a suite that is red before you start is reported now, not
-discovered later. If the subsystem is too large to hold as one model, propose a
-split and run on one part.
+**Gate 0, before dispatching anything.** Apply Start and record the outcome.
+Record Signals: each reading with its tool and number, the gaps, and the
+hotspot and cold files. Confirm with the human, in writing: the Start
+outcome, the subsystem and its boundary (paths in, paths out), and any
+behaviour they already know is unwanted and may change. Run the full test
+suite and record the result; a suite that is red before you start is
+reported now, not discovered later. If the subsystem is too large to hold
+as one model, propose a split and run on one part.
 
-**Wave 1, Observe: parallel, read-only.** Split the subsystem into up to 5
-areas and dispatch one read-only subagent per area. Each returns:
+Done when the ledger holds the Start outcome, every Signal reading with its
+tool and number (or a gap, or that no tool is installed), the hotspot and
+cold files, the boundary, and the suite result, and the human has confirmed.
+A Start outcome that ends the run stops here.
+
+**Wave 1, Observe: parallel, read-only.** After Gate 0 records a justifying
+condition, split the subsystem into up to 5 areas and dispatch one
+read-only subagent per area. Each returns:
 
 - every file with a one-line role
 - every entry point, traced to where its data ends up
@@ -112,8 +178,12 @@ areas and dispatch one read-only subagent per area. Each returns:
   labels), with locations
 - state, config and external dependencies it touches
 - workarounds, comments that explain history, and anything that looks unused
+- hotspot or cold, from Signals
 
-Done when every file in the boundary appears in exactly one report.
+Done when every file in the boundary appears in exactly one report, and
+each file is tagged hotspot or cold from Signals, unless Signals records
+that no tool is installed. A zero-regression trap found here ends the run:
+apply Start.
 
 **Green, yours.** From the reports, write Essence, Concepts, Invariants and
 Canonical order. Write the Essence as the story the domain tells
@@ -147,8 +217,9 @@ map:
   invariant 2. Anything it cannot clear moves to Uncertain.
 
 Fill the Plan, ordered consolidate → move → rewrite → delete, and the before
-column of Measure. Done when every file carries a class and both adversaries
-have reported.
+column of Measure. Apply the hotspot rule in Signals. Done when every file
+carries a class, every hotspot is a rewrite candidate in the Plan, every
+cold file is outside the rewrite, and both adversaries have reported.
 
 **Gate 1, the human approves the ledger.** Show it and stop. Apply their edits.
 No code changes before this gate; editing before the model is agreed only
@@ -181,7 +252,8 @@ and its own file boundary.
 
 ## Measure
 
-Count, don't score. For the subsystem, before and after:
+Count, don't score. This table is the result of the run. Readings from
+Signals stay in that ledger section. For the subsystem, before and after:
 
 | Metric | Before | After |
 | --- | --- | --- |
